@@ -46,10 +46,6 @@ module.exports = function (mode) {
             loader: "ts-loader",
             options: {
               happyPackMode: true, // 编译时 不进行类型检查
-              // configFile:
-              //   mode === "production"
-              //     ? path.resolve(__dirname, "../tsconfig/tsconfig.prod.json")
-              //     : path.resolve(__dirname, "../tsconfig/tsconfig.dev.json"),
             },
           },
           exclude: /node_modules/,

@@ -1,24 +1,44 @@
-import React from 'react'
-import { getLocalStorage } from '@/libs/tools'
+import React, { useEffect, useState } from 'react'
+import { getLocalStorage, getURLQuery } from '@/libs/tools'
 import { useHistory } from 'react-router-dom'
 
-export const POSTID = 'POSTID'
-const cache = getLocalStorage(POSTID)
+const regex =
+  /<p><block class="__q"(.(?!(\/block><br\/><\/p>)))*<\/block><br\/><\/p>/g
 
-const regex = /<p><block class="__q"(.(?!(\/block><br\/><\/p>)))*<\/block><br\/><\/p>/g
-
+// const regex =
+//   /[^(<p><block class="__q"(.(?!(\/block><br\/><\/p>)))*<\/block><br\/><\/p>)]*/g
 const Index = () => {
+  // const [articleId, setArticleId] = useState('')
+  const [content, setContent] = useState({ __html: '' })
   const history = useHistory()
-  if (!cache) {
-    history.push('/')
-    return
-  }
+  const [questionList, setQuestionList] = useState<any>([])
+  const articleId = getURLQuery()
 
-  const { content, questionList } = JSON.parse(cache)
-  const html = { '__html': content }
-  console.log(content)
+  useEffect(() => {
+    if (!articleId) {
+      history.push('/')
+      return
+    }
+    const cache = getLocalStorage(articleId)
+    if (!cache) {
+      history.push('/')
+      return
+    }
 
-  return <div style={{padding: '24px'}} dangerouslySetInnerHTML={html}></div>
+    const { content, questionList } = JSON.parse(cache) as {
+      content: string
+      questionList: any
+    }
+    console.log(content.match(regex))
+    console.log(questionList)
+    setContent({ __html: content })
+
+    setQuestionList(questionList)
+  }, [])
+
+  return (
+    <div style={{ padding: '24px' }} dangerouslySetInnerHTML={content}></div>
+  )
 }
 
 export default Index

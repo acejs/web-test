@@ -1,19 +1,24 @@
-import React from "react";
+import React from 'react'
 
 export const Routes = [
   {
-    path: "/",
-    name: "index",
-    component: React.lazy(() => import("../pages/index")),
+    path: '/',
+    name: 'index',
+    component: React.lazy(() => import('../pages/index')),
   },
   {
-    path: "/draft",
-    name: "draft",
-    component: React.lazy(() => import("../pages/draft")),
+    path: '/draft',
+    name: 'draft',
+    component: React.lazy(() => import('../pages/draft')),
   },
   {
-    path: "/article",
-    name: "article",
-    component: React.lazy(() => import("../pages/article")),
+    path: '/article',
+    name: 'article',
+    component: React.lazy(() => import('../pages/article')),
   },
-];
+  {
+    path: '*',
+    name: 'error-404',
+    component: React.lazy(() => import('../pages/error/error-404')),
+  },
+]

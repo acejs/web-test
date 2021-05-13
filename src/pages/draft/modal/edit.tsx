@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Modal, Input, Row, Col, Button } from 'antd'
-import { IQuestion, initialCode, POSTID } from '../question'
+import { IQuestion, initialCode } from '../question'
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons'
-import { getLocalStorage, setLocalStorage } from '../../../libs/tools'
+import { getLocalStorage, setLocalStorage, getURLQuery } from '@/libs/tools'
 
 export interface IInfo {
-  type: number    // 0 新增   1 编辑
+  type: number // 0 新增   1 编辑
   questionList: IQuestion[]
   setQuestionList: React.Dispatch<React.SetStateAction<IQuestion[]>>
   index?: number
@@ -18,12 +18,17 @@ interface IProps {
 }
 
 const Edit: React.FC<IProps> = (props) => {
-  const { visible, toggleVisible, info: { type, questionList, setQuestionList, index } } = props
+  const {
+    visible,
+    toggleVisible,
+    info: { type, questionList, setQuestionList, index },
+  } = props
   const [question, setQuestion] = useState<IQuestion>({
     title: '',
     options: [''],
-    rightAnswer: ''
+    rightAnswer: '',
   })
+  const draftId = getURLQuery()
 
   const handleOk = () => {
     let list = [...questionList]
@@ -34,13 +39,13 @@ const Edit: React.FC<IProps> = (props) => {
     }
     setQuestionList(list)
 
-    const cache = getLocalStorage(POSTID)
+    const cache = getLocalStorage(draftId)
     if (cache) {
       const o = JSON.parse(cache)
       o.questionList = list
-      setLocalStorage(POSTID, JSON.stringify(o))
+      setLocalStorage(draftId, JSON.stringify(o))
     } else {
-      setLocalStorage(POSTID, JSON.stringify({questionList: list}))
+      setLocalStorage(draftId, JSON.stringify({ questionList: list }))
     }
     handleCancel()
   }
@@ -55,7 +60,7 @@ const Edit: React.FC<IProps> = (props) => {
     setQuestion({
       title: '',
       options: [''],
-      rightAnswer: ''
+      rightAnswer: '',
     })
     toggleVisible(false)
   }
@@ -65,21 +70,24 @@ const Edit: React.FC<IProps> = (props) => {
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuestion({
       ...question,
-      title: e.target.value
+      title: e.target.value,
     })
   }
 
   const handleRightAnswerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuestion({
       ...question,
-      rightAnswer: e.target.value
+      rightAnswer: e.target.value,
     })
   }
 
-  const handleOptionsValueChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleOptionsValueChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
     if (Array.isArray(question.options)) {
       question.options[index] = e.target.value
-      setQuestion({...question})
+      setQuestion({ ...question })
     }
   }
 
@@ -90,41 +98,66 @@ const Edit: React.FC<IProps> = (props) => {
     } else {
       question.options.splice(index, 1)
     }
-    setQuestion({...question})
+    setQuestion({ ...question })
   }
 
-  return <Modal style={{marginLeft: '56%'}} width="650px" title={title} visible={visible} onOk={handleOk} onCancel={handleCancel}>
-    <Row align="middle">
-      <Col span={2}>题目</Col>
-      <Col span={12}>
-        <Input value={question.title} onChange={handleTitleChange}></Input>
-      </Col>
-      <Col span={3} offset={1}>正确答案</Col>
-      <Col span={6}>
-        <Input value={question.rightAnswer} onChange={handleRightAnswerChange}></Input>
-      </Col>
-    </Row>
-    {
-      Array.isArray(question.options)
+  return (
+    <Modal
+      style={{ marginLeft: '56%' }}
+      width="650px"
+      title={title}
+      visible={visible}
+      onOk={handleOk}
+      onCancel={handleCancel}
+    >
+      <Row align="middle">
+        <Col span={2}>题目</Col>
+        <Col span={12}>
+          <Input value={question.title} onChange={handleTitleChange}></Input>
+        </Col>
+        <Col span={3} offset={1}>
+          正确答案
+        </Col>
+        <Col span={6}>
+          <Input
+            value={question.rightAnswer}
+            onChange={handleRightAnswerChange}
+          ></Input>
+        </Col>
+      </Row>
+      {Array.isArray(question.options)
         ? question.options.map((item, index) => {
-          return <Row key={index} style={{marginTop: '24px'}} align="middle">
-                    <Col span={2}>{String.fromCharCode(initialCode + index)}、</Col>
-                    <Col span={12}>
-                      <Input value={item} onChange={(e) => handleOptionsValueChange(e, index)}></Input>
-                    </Col>
-                    <Col span={4} offset={1}>
-                      {
-                        index > 0
-                        ? <Button onClick={() => handleOptionsItemChange(index, 'del')} shape="circle" icon={<MinusOutlined />} /> 
-                        : ''
-                      }
-                      <Button onClick={() => handleOptionsItemChange(index, 'add')} shape="circle" icon={<PlusOutlined />} /> 
-                    </Col>
-                </Row>
+            return (
+              <Row key={index} style={{ marginTop: '24px' }} align="middle">
+                <Col span={2}>{String.fromCharCode(initialCode + index)}、</Col>
+                <Col span={12}>
+                  <Input
+                    value={item}
+                    onChange={(e) => handleOptionsValueChange(e, index)}
+                  ></Input>
+                </Col>
+                <Col span={4} offset={1}>
+                  {index > 0 ? (
+                    <Button
+                      onClick={() => handleOptionsItemChange(index, 'del')}
+                      shape="circle"
+                      icon={<MinusOutlined />}
+                    />
+                  ) : (
+                    ''
+                  )}
+                  <Button
+                    onClick={() => handleOptionsItemChange(index, 'add')}
+                    shape="circle"
+                    icon={<PlusOutlined />}
+                  />
+                </Col>
+              </Row>
+            )
           })
-        : ''
-    }
-  </Modal>
+        : ''}
+    </Modal>
+  )
 }
 
 export default Edit

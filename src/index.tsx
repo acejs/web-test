@@ -5,17 +5,22 @@ import { Routes } from './router'
 import 'antd/dist/antd.css'
 
 const App = () => {
-  return <div>
+  return (
     <Router>
-            <Suspense fallback={<div>Loading...</div>}>
-              <Switch>
-                {
-                  Routes.map(info => <Route key={info.name} exact component={info.component} path={info.path}></Route>)
-                }
-              </Switch>
-            </Suspense>
-        </Router>
-  </div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Switch>
+          {Routes.map((info) => (
+            <Route
+              key={info.name}
+              exact
+              component={info.component}
+              path={info.path}
+            ></Route>
+          ))}
+        </Switch>
+      </Suspense>
+    </Router>
+  )
 }
 
 ReactDOM.render(<App />, document.getElementById('app'))
