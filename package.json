@@ -6,7 +6,7 @@
   "types": "./types/index.d.ts",
   "scripts": {
     "dev": "webpack-dev-server --mode=development --config ./scripts/build/webpack.config.js",
-    "build": "tsc -p ./scripts/tsconfig/tsconfig.prod.json && webpack --profile --mode=production --config ./scripts/build/webpack.config.js",
+    "build": "webpack --profile --mode=production --config ./scripts/build/webpack.config.js",
     "test": "jest"
   },
   "repository": "https://github.com/BlueBlueBlueSky/rc-webpack-config.git",

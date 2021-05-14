@@ -1,16 +1,17 @@
-const path = require("path");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const path = require('path')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = function (mode) {
   return {
     output: {
-      filename: "index.js",
-      path: path.resolve(__dirname, "../../dist"),
+      filename: 'index.js',
+      path: path.resolve(__dirname, '../../dist'),
     },
     resolve: {
-      extensions: [".ts", ".tsx", ".js", ".json", ".less", ".css"],
+      extensions: ['.ts', '.tsx', '.js', '.json', '.less', '.css'],
       alias: {
-        "@": path.resolve(__dirname, "../../src"),
+        '@': path.resolve(__dirname, '../../src'),
       },
     },
     module: {
@@ -19,13 +20,13 @@ module.exports = function (mode) {
         {
           test: /\.less$/,
           use: [
-            mode === "production"
+            mode === 'production'
               ? MiniCssExtractPlugin.loader
-              : "style-loader",
-            "css-loader",
-            "postcss-loader",
+              : 'style-loader',
+            'css-loader',
+            'postcss-loader',
             {
-              loader: "less-loader",
+              loader: 'less-loader',
             },
           ],
           exclude: /node_modules/,
@@ -34,16 +35,16 @@ module.exports = function (mode) {
         {
           test: /\.css$/,
           use: [
-            mode === "production"
+            mode === 'production'
               ? MiniCssExtractPlugin.loader
-              : "style-loader",
-            "css-loader",
+              : 'style-loader',
+            'css-loader',
           ],
         },
         {
           test: /\.tsx?$/,
           use: {
-            loader: "ts-loader",
+            loader: 'ts-loader',
             options: {
               happyPackMode: true, // 编译时 不进行类型检查
             },
@@ -55,13 +56,13 @@ module.exports = function (mode) {
           test: /\.(woff2?|eot|ttf|otf|png|jpe?g|gif|webp)(\?.*)?$/,
           use: [
             {
-              loader: "url-loader",
+              loader: 'url-loader',
               options: {
                 limit: 10240,
                 fallback: {
-                  loader: "file-loader",
+                  loader: 'file-loader',
                   options: {
-                    name: "img/[name].[hash:8].[ext]",
+                    name: 'img/[name].[hash:8].[ext]',
                   },
                 },
               },
@@ -73,9 +74,9 @@ module.exports = function (mode) {
           test: /\.(svg)(\?.*)?$/,
           use: [
             {
-              loader: "file-loader",
+              loader: 'file-loader',
               options: {
-                name: "img/[name].[hash:8].[ext]",
+                name: 'img/[name].[hash:8].[ext]',
               },
             },
           ],
@@ -83,9 +84,12 @@ module.exports = function (mode) {
       ],
     },
     plugins: [
+      new HtmlWebpackPlugin({
+        template: './public/index.html',
+      }),
       new MiniCssExtractPlugin({
-        filename: "/css/[name].css",
+        filename: '/css/[name].css',
       }),
     ],
-  };
-};
+  }
+}
