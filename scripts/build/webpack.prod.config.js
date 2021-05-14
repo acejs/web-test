@@ -9,7 +9,7 @@ module.exports = {
   devtool: 'none',
   entry: path.resolve(__dirname, '../../src/index.tsx'),
   output: {
-    libraryTarget: 'commonjs',
+    // libraryTarget: 'commonjs',
     filename: '[contenthash].bundle.js',
   },
   optimization: {
