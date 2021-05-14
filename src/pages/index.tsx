@@ -34,7 +34,7 @@ const Index = () => {
   return (
     <Card style={{ width: '500px', margin: '200px auto' }}>
       <Row>
-        <Input value={id} onChange={handleChange}></Input>
+        <Input value={id} onChange={handleChange} placeholder="文章编号"></Input>
       </Row>
       <Row justify="end" style={{ marginTop: '24px' }}>
         <Col span={8}>
@@ -44,6 +44,7 @@ const Index = () => {
           </Button>
         </Col>
       </Row>
+      <p>由于目前都存储在前端的内存中，草稿的文章编号，需要和阅读的文章编号一致</p>
     </Card>
   )
 }

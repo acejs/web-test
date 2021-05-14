@@ -17,6 +17,11 @@ export const Routes = [
     component: React.lazy(() => import('../pages/article')),
   },
   {
+    path: '/result',
+    name: 'result',
+    component: React.lazy(() => import('../pages/result')),
+  },
+  {
     path: '*',
     name: 'error-404',
     component: React.lazy(() => import('../pages/error/error-404')),
